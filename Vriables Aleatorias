@@ -1,0 +1,86 @@
+#####Ejercicio 1
+nsim<-1000
+u<-runif(nsim)
+x<-vector()
+for(i in 1:nsim){
+  j<-0
+  pos<-0
+  p0<- exp(-2)
+  while (pos==0) {
+    if (u[i]<=p0) {
+      x[i]<-j
+      pos<-pos+1
+    }
+    else{
+      j<-j+1
+      p0<-p0+((exp(-2)*(2^j))/factorial(j))
+    }
+  }
+}
+hist(x, freq = F , main = "Histograma 1")
+
+
+
+####Ejercico 2 
+nsim<-1000
+U<-runif(nsim)
+X<-vector()
+for (i in 5:nsim){
+  X[i]=floor(15*U[i]+1)
+  }
+X
+hist(X, freq = FALSE, xlim = c(5,15), main = "Histograma 2")
+curve(dunif(x,5,15),lwd=2,add = TRUE,col="Blue")
+
+
+
+####Ejercicio 3
+nsim<-1000
+x<-vector()
+u<-runif(nsim)
+
+for(i in 1:nsim)
+{
+  if(0<u[i] & u[i]<=0.5){
+    
+    x[i]=sqrt(u[i]/2)
+  }
+  else{ x[i]=1-(sqrt(2)*sqrt((1-u[i]))/2)
+  }
+}
+
+hist(x,freq = F,ylim = c(0,2),main = "Histograma 3")
+
+densidad<- function(x)
+{4*x*(0<=x&x<=.5)+4*(1-x)*(.5<x&x<=1)}
+curve(densidad(x),add = T,col="red") 
+
+
+
+####Ejercicio 4
+nsim<-1000
+U <- runif(nsim)
+valorcau <- vector()
+y<-rcauchy(nsim)
+
+for (i in 1:nsim) {
+  
+  if(U[i]<=(1+y[i]^2)*exp(-y[i]^2/2)){
+    
+    valorcau[i] <- y[i]
+  }
+  else {
+    valorcau[i]<-0
+  }
+}
+
+z<-valorcau[valorcau!=0]
+
+tasacepcauchy<-length(z)/length(valorcau)
+print("tasacepcauchy")
+print(tasacepcauchy)
+print("Numero medio de iteraciones")
+print(1/tasacepcauchy)
+
+hist(z, freq = F,main = "Histograma 4")
+curve(dcauchy(x), add = T, col="red")
