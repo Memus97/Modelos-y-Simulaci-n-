@@ -1,0 +1,25 @@
+h<-function(x,y)(2*x*exp((1-x^2)*(y^2)))
+
+x.llim<-3
+x.ulim<-Inf
+y.llim<-1
+y.ulim<-Inf
+
+#Cálculo de la integral con la función "integrate"
+integrate(function(y){
+  sapply(y, function(y){
+    integrate(function(x)h(x,y),x.llim,x.ulim)$value
+  })
+},y.llim,y.ulim)
+
+
+#Integracion MC
+nsim<-10^4
+ux<-runif(nsim)
+uy<-runif(nsim)
+
+g1<- (-2*3)/(ux-1)^2-3
+g2<- (-2*1)/(uy-1)^2-1
+
+htheta<- (-12)/((ux-1)^2*(uy-1)^2)*h(g1,g2)
+mean(htheta)
