@@ -1,0 +1,41 @@
+# Sea X una variable aleatoria con función de densidad f(x).
+
+### Generar 1000 númeeros aleatorios de esta densidad usando el metodo de la transformada inversa.
+
+##### GENERAR U~u(0,1) #####
+
+##### DEVOLVER X=Fˆ(-1) #####
+
+nsim<-1000
+
+set.seed(1)
+
+U<- runif(nsim)
+
+U1<- sqrt(2*U)
+
+U2<-2*U
+
+for (j in 1:nsim)
+
+{if (0<=U[j] & U[j]<=0.5)
+
+{U1}
+
+else
+
+{U2}
+
+}
+
+##### GRAFICA #####
+
+graf<-c(U1,U2)
+
+hist(graf,freq=F,xlim = c(0,2),ylim = c(0,1), main ="HISTOGRAMA")
+
+curve(dnorm(x,mean = 1, sd = .5, log = FALSE),lwd=2,add = T,col="blue")
+
+#### Comentario: podemos observar en el histograma de los datos generados que por su forma,
+
+#### tienden a una distribución normal con media=1 y una desviación=.5 
