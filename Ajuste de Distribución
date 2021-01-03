@@ -1,0 +1,85 @@
+# ------------------------------------ RIESGOS PROFESIONALES --------------------------------------- 
+
+#------------------------------------------ Datos ------------------------------------------
+sev<-read.csv("C:Responsabilidad Civil_Siniestros.csv")
+seve<-sev[,2]
+seve<- gsub(",", "", seve)
+seve<- as.numeric(seve) 
+hist(seve)
+severity<-seve[seve>=0]
+severity<-severity[severity>0]
+severity<-severity[severity<=40000000]
+hist(severity)
+severity<-severity[severity>=8000000]
+hist(severity)
+
+severidad<- fit.cont(severity)
+
+#----------------------------Histograma y Densidad de los datos------------------------------
+par(mfrow=c(1,2))
+hist(severity)
+plot(density(severity))
+
+
+#------------------------------Estimaci?n de Par?metros-------------------------------------
+we<-fitdist(severity,"weibull")
+summary(we)
+severitywe<-rweibull(length(severity), we$estimate[1], we$estimate[2])
+
+
+ln<-fitdist(severity,"lnorm")
+summary(ln)
+severityln<-rlnorm(length(severity), ln$estimate[1], ln$estimate[2])
+
+
+#--------------------------------------Pruebad de Bondad------------------------------------
+
+
+#------------------------------------- weubull ------------------------------------
+# H0: los datos siguen una ~ weibull (shape=2.243988e+00, scale=1.970400e+0).
+# H1: los datos NO siguen una ~ weibull(shape=2.243988e+00, scale=1.970400e+0).
+
+# CHI-CUADRADA
+chisq.test(severitywe)
+# p-value < 2.2e-16, por lo tanto Rechazamos H0
+
+# KOLMOGOROV
+ks.test(sever,severitywe)
+# p-value = 3.69e-06, Por lo tanto Rechazamos H0.
+
+# CRAMER
+cvm.test(severitywe ,"pweibull",shape=we$estimate[1],scale=we$estimate[2])
+# p-value = 0.1969, Por lo tanto No Rechazamos H0.
+
+# ANDERSON DARLIN
+ad.test(severitywe,"pweibull",shape=we$estimate[1],scale=we$estimate[2])
+# p-value = 0.2586, Por lo tanto No Rechazamos H0.
+
+#SHAPIRO
+shapiro.test(severitywe)
+#p-value = 0.0004193, por lo tanto Rechazamos H0.
+
+#----------------------------------- LogNormal -----------------------------------
+# H0: los datos siguen una ~ lognormal (Media=16.5138660, sd=0.4390518).
+# H1: los datos NO siguen una ~ lognormal (Media=16.5138660, sd=0.4390518).
+
+# CHI-CUADRADA
+chisq.test(severityln)
+# p-value < 2.2e-16, por lo tanto Rechazamos H0
+
+# KOLMOGOROV
+ks.test(severityln, severity)
+# p-value = 0.1991, Por lo tanto No Rechazamos H0.
+
+# CRAMER
+cvm.test(severityln,"plnorm",meanlog=ln$estimate[1],sdlog=ln$estimate[2])
+# p-value = 0.8014, Por lo tanto No Rechazamos H0.
+
+# ANDERSON DARLIN
+ad.test(severityln,"plnorm",meanlog=ln$estimate[1],sdlog=ln$estimate[2])
+# p-value = 0.8398, Por lo tanto No Rechazamos H0.
+
+#SHAPIRO
+shapiro.test(severityln)
+#p-value = 2.945e-13, por lo tanto  Rechazamos H0.
+
